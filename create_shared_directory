@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# to be called with a single argument for the group name
+# script assumes all directories in /home represent users to add
+
+grep "$1": /etc/group &> /dev/null
+
+if [ "$?" -eq 0 ] ; then
+    echo "Group $1 already exists."
+else
+    echo "Adding group: $1 and creating shared directory."
+    sudo groupadd $1
+
+    path="/usr/local/share/$1"
+    sudo mkdir "$path"
+
+    sudo chown ":$1" "$path"
+    sudo chmod 775 "$path"
+    sudo chmod g+s "$path"
+
+    for name in /home/* ; do
+        grep "$name": /etc/passwd &> /dev/null 
+
+        if [ "$?" -eq 0 ] && [ -d "$name" ] ; then
+            user=$(echo $name | cut -d'/' -f3)
+            echo "Adding $user to group: $1"
+            sudo usermod -aG "$1" "$user"
+        fi
+    done
+fi

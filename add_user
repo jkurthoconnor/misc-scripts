@@ -1,0 +1,21 @@
+#!/bin/bash
+
+data="/home/jko/users_to_add"
+IFS=$'\n'
+
+for user in $(cat $data)
+do
+  name=$(echo $user | cut -d"," -f1)
+  key=$(echo $user | cut -d"," -f2)
+  user_home="/home/${name}"
+
+  echo $key > tmp_keyfile
+
+  sudo adduser --disabled-password $name
+  sudo mkdir "${user_home}/.ssh"
+  sudo mv tmp_keyfile "${user_home}/.ssh/authorized_keys"
+  sudo chown ${name}: "${user_home}/.ssh/authorized_keys"
+  sudo chmod 600 "${user_home}/.ssh/authorized_keys"
+  sudo chown ${name}: "${user_home}/.ssh"
+  sudo chmod 700 "${user_home}/.ssh"
+done
