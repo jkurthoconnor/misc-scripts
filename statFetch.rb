@@ -30,7 +30,8 @@ end
 
 def get_uname(holder)
   raw, status = Open3.capture2("uname -a")
-  holder[:host], holder[:kernel], holder[:distro] = raw.split(/\s+/).slice(1..3)
+  holder[:host], holder[:kernel] = raw.split(/\s+/).slice(1..2)
+  holder[:distro] = Open3.capture2("lsb_release -s -d")[0] 
 end
 
 DATA = {}
