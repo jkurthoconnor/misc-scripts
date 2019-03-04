@@ -23,9 +23,6 @@ class Pomodoro
     system("timew start #{options[:task]} > /dev/null")
     system("notify-send 'Timer initiated for #{options[:task]}'")
 
-    # pid = Process.spawn('watch timew')
-    # Process.detach(pid)
-    
     sleep(options[:duration] * SECONDS_PER_POMODORO)
 
     if options[:stop_timer]
@@ -35,16 +32,15 @@ class Pomodoro
       system("notify-send -u critical -t 60000 'Pomodoros completed'")
     end
 
-    # Process.kill("EXIT", pid)
-
     exit(0)
   end
 
   private
   def extract_tags
     Open3.capture2("timew tags")[0]
-      .gsub(/\n.+\n.+\n/, "")
-      .split(/\s+-\n+/)
+      .sub(/\n.+\n.+\n/, "") # remove header line
+      .split(/\n+/)
+      .map { |full_tag| full_tag.split[0] }
   end
 
   def extract_options(opts)
@@ -86,4 +82,5 @@ class Pomodoro
   end
 end
 
-Pomodoro.new(ARGF.argv).run_timer
+# Pomodoro.new(ARGV).run_timer
+p Pomodoro.new(ARGV).valid_tags
