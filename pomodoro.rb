@@ -45,22 +45,15 @@ class Pomodoro
 
   def extract_options(opts)
     options = {}
-    idx = 0
 
-    while idx < opts.length
-      opt = opts[idx]
-
+    opts.each_with_index do |opt, idx|
       if opt.eql?('-t')
         options[:task] = opts[idx + 1]
-        idx += 1
       elsif opt.eql?('-p')
         options[:duration] = opts[idx + 1].to_i
-        idx += 1
       elsif opt.eql?('-s')
         options[:stop_timer] = true
       end
-
-      idx += 1
     end
 
     validate(options)
@@ -82,5 +75,4 @@ class Pomodoro
   end
 end
 
-# Pomodoro.new(ARGV).run_timer
-p Pomodoro.new(ARGV).valid_tags
+Pomodoro.new(ARGV).run_timer
