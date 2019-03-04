@@ -69,13 +69,13 @@ class Pomodoro
   def validate(opts)
     if !opts[:task]
       STDERR.puts("ERROR: value -t (task) must be present")
-      exit(127)
+      exit(1)
     elsif !valid_tags.include?(opts[:task])
       STDERR.puts("ERROR: value of -t (task) must be existing tag")
-      exit(127)
+      exit(1)
     elsif opts[:duration].to_s.match?(/[^123]/)
       STDERR.puts("ERROR: value of -p (pomodoros) must be 1, 2 or 3")
-      exit(127)
+      exit(1)
     end
 
     opts
