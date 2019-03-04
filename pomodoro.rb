@@ -12,7 +12,7 @@ require 'open3'
 
 class Pomodoro
   attr_reader :options, :valid_tags
-  SECONDS_PER_POMODORO = 1 * 60
+  SECONDS_PER_POMODORO = 25 * 60
 
   def initialize(opts)
     @valid_tags = extract_tags
