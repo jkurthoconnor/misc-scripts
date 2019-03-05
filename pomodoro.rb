@@ -29,7 +29,7 @@ class Pomodoro
       system("timew stop > /dev/null")
       system("notify-send -u critical -t 5000 'Timer stopped'")
     else
-      system("notify-send -u critical -t 60000 'Pomodoros completed'")
+      system("notify-send -u critical -t 60000 'Pomodoros completed; Timer still running!'")
     end
 
     exit(0)
@@ -44,7 +44,7 @@ class Pomodoro
   end
 
   def extract_options(opts)
-    options = {}
+    options = { duration: 1, stop_timer: false }
 
     opts.each_with_index do |opt, idx|
       if opt.eql?('-t')
