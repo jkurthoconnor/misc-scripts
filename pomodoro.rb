@@ -13,6 +13,7 @@ require 'open3'
 class Pomodoro
   attr_reader :options, :valid_tags
   SECONDS_PER_POMODORO = 25 * 60
+  DEFAULTS = { duration: 1, stop_timer: false }.freeze
 
   def initialize(opts)
     @valid_tags = extract_tags
@@ -44,7 +45,7 @@ class Pomodoro
   end
 
   def extract_options(opts)
-    options = { duration: 1, stop_timer: false }
+    options = DEFAULTS.dup
 
     opts.each_with_index do |opt, idx|
       if opt.eql?('-t')
