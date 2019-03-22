@@ -14,10 +14,7 @@ require 'open3'
 class Pomodoro
   attr_reader :options, :valid_tags
   SECONDS_PER_POMODORO = 25 * 60
-<<<<<<< HEAD
-=======
   DEFAULTS = { duration: 1, stop_timer: false }.freeze
->>>>>>> refs/remotes/origin/master
 
   def initialize(opts)
     @valid_tags = extract_tags
