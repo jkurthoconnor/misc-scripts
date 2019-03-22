@@ -1,6 +1,7 @@
 #! /usr/bin/env ruby
 
 # TODO:
+#   *** fix tag list acquisition
 #   add error handling to `run_timer`
 #   refactor `validate`: extract STDERR messages to hsh
 #   add help option
@@ -12,7 +13,7 @@ require 'open3'
 
 class Pomodoro
   attr_reader :options, :valid_tags
-  SECONDS_PER_POMODORO = 1 * 60
+  SECONDS_PER_POMODORO = 25 * 60
 
   def initialize(opts)
     @valid_tags = extract_tags
