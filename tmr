@@ -1,18 +1,22 @@
 #! /usr/bin/env ruby
 
 # TODO:
-#   add flag to show tags: --tags
-#   add flag to stop running timer: --stop
+#   improve flag to stop running timer: --stop
 #       - stop timew and kill any tmr processes
+#
 #   improve notifications: interpolate tag name; icon?
+#
 #   add error handling to `run_timer`
-#   refactor `validate`: extract STDERR messages to hsh
+#   
+#   move messages to TimerMessages module; call them as getters
+#
 #   add help option
+#
 #   implement option to watch `timew` (approximates a running timer)
 #     - would this require forking?
 #     - maybe spawn process, keep its pid and kill at end?
 
-require 'open3'
+require "open3"
 
 class Timer
   attr_reader :options, :valid_tags
@@ -21,7 +25,7 @@ class Timer
 
   def initialize(opts)
     @valid_tags = extract_tags
-    @options = extract_options(opts)
+    @options = parse_options(opts)
   end
 
   def run_timer
@@ -48,20 +52,33 @@ class Timer
       .map { |full_tag| full_tag.split[0] }
   end
 
-  def extract_options(opts)
+  def parse_options(opts)
     options = DEFAULTS.dup
+    early_exit_opts = /(tags|stop|status|summary)/
 
     opts.each_with_index do |opt, idx|
-      if opt.eql?('-t')
+      if opt.match?(early_exit_opts)
+        execute_early_exit_option(opt)
+        exit(0)
+      elsif opt.eql?("-t")
         options[:task] = opts[idx + 1]
-      elsif opt.eql?('-b')
+      elsif opt.eql?("-b")
         options[:blocks] = opts[idx + 1].to_i
-      elsif opt.eql?('-s')
+      elsif opt.eql?("-s")
         options[:stop_timer] = true
       end
     end
 
     validate(options)
+  end
+
+  def execute_early_exit_option(opt)
+    case (opt)
+    when "tags"   then STDOUT.puts(valid_tags)
+    when "stop"   then system("timew stop")
+    when "status" then system("timew status")
+    when "summary" then system("timew summary")
+    end
   end
 
   def validate(opts)
