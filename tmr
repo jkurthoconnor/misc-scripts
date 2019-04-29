@@ -12,6 +12,8 @@
 #
 #   add help option
 #
+#   remove tag validation?
+#
 #   implement option to watch `timew` (approximates a running timer)
 #     - would this require forking?
 #     - maybe spawn process, keep its pid and kill at end?
